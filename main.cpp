@@ -167,9 +167,10 @@ static void show_usage()
     std::cerr << "Use: " << "progname.exe " << " <option(s)>" << std::endl;
     std::cout << "Options:\n"
               << "-h,--help\tShow this help message\n\n"
-              << "-r NUM1 NUM2\tgo throug raws NUM1-NUM2 War: NUM1 > NUM2, NUM1,NUM2 in {1;"<< imn <<"}\"\"\n\n"
-              << "-c NUM1 NUM2\tgo throug columns NUM1-NUM2 War: NUM1 > NUM2, NUM1,NUM2 in {1;" << imm << "}\"\"\n\n"
-              << "\t for single raw/column NUM1 = NUM2\"\"\n\n"
+              << "-r NUM1 NUM2\tgo through rows NUM1-NUM2 War: NUM1 > NUM2, NUM1,NUM2 in {1;"<< imn <<"}\"\"\n\n"
+              << "-c NUM1 NUM2\tgo through columns NUM1-NUM2 War: NUM1 > NUM2, NUM1,NUM2 in {1;" << imm << "}\"\"\n\n"
+              << "\t \tfor single raw/column NUM1 = NUM2\"\"\n\n"
+              << "-all\t\tgo though all rows of image\n\n"
               << std::endl;
 }
 
@@ -185,15 +186,18 @@ int main(int argc, char **argv) {
 
 
     if(argc == 1) {
-        throughRaws = true;
-        lowerLimit = 1;
-        upperLimit = imn;
+        show_usage();
+        return 0;
     }
     else if(argc == 2) {
         std::string arg = argv[1];
         if ((arg == "-h") || (arg == "--help")) {
             show_usage();
             return 0;
+        } else if (arg == "-all") {
+            throughRaws = true;
+            lowerLimit = 1;
+            upperLimit = imn;
         }
     }else if(argc == 4) {
         std::string arg = argv[1];
