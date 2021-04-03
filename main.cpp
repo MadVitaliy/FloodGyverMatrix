@@ -53,22 +53,22 @@ int imm = 40;
 
 
 /*std::string image = "                                       "
-                    "                                   ##  "
-                    "                                  #  # "
-                    "                                     # "
-                    "                                    #  "
-                    "                                   #   "
-                    "  #####        ##     ##   ####   #    "
-                    "  #####        ###   ###  ######  #### "
-                    "  ##           #### ####  ##   #       "
-                    "  ##           ## ### ##  ##           "
-                    "  #####  ####  ##  #  ##  ##           "
-                    "  #####  ####  ##     ##  ##           "
-                    "  ##           ##     ##  ##           "
-                    "  ##     ####  ##     ##  ##   #       "
-                    "  #####  ####  ##     ##  ######       "
-                    "  #####        ##     ##   ####        "
-                    "                                       ";
+                      "                                   ##  "
+                      "                                  #  # "
+                      "                                     # "
+                      "                                    #  "
+                      "                                   #   "
+                      "  #####        ##     ##   ####   #    "
+                      "  #####        ###   ###  ######  #### "
+                      "  ##           #### ####  ##   #       "
+                      "  ##           ## ### ##  ##           "
+                      "  #####  ####  ##  #  ##  ##           "
+                      "  #####  ####  ##     ##  ##           "
+                      "  ##           ##     ##  ##           "
+                      "  ##     ####  ##     ##  ##   #       "
+                      "  #####  ####  ##     ##  ######       "
+                      "  #####        ##     ##   ####        "
+                      "                                       ";
 
 int imn = 16;
 int imm = 39;*/
@@ -101,7 +101,7 @@ std::vector<std::vector<std::string>> imageToCommands(std::string img, int n, in
     return result;
 }
 
-
+//copy string to clipboard
 void Clipboard(const char* str, int length)
 {
     HGLOBAL h = GlobalAlloc(GMEM_MOVEABLE, length * sizeof(CHAR*));
@@ -118,21 +118,25 @@ void Clipboard(const char* str, int length)
 }
 
 
+//push ctrl+V
 void pasteFromClipboard() {
     INPUT inputs[2];
     ZeroMemory(inputs, sizeof(inputs));
 
+    //set keys type ki.dwFlags = 0 by default
     inputs[0].type = INPUT_KEYBOARD;
     inputs[0].ki.wVk = VK_CONTROL;
 
     inputs[1].type = INPUT_KEYBOARD;
     inputs[1].ki.wVk = 0x56;
 
+    //push ctrl+V
     SendInput(ARRAYSIZE(inputs), inputs, sizeof(INPUT));
 
     Sleep(5);
     inputs[0].ki.dwFlags = KEYEVENTF_KEYUP;
     inputs[1].ki.dwFlags = KEYEVENTF_KEYUP;
+    //release ctrl+V
     SendInput(ARRAYSIZE(inputs), inputs, sizeof(INPUT));
 }
 
@@ -143,22 +147,20 @@ void enter(){
     inputs[0].type = INPUT_KEYBOARD;
     inputs[0].ki.dwFlags = 0;
     inputs[0].ki.wVk = VK_RETURN;
+    //push enter
     SendInput(ARRAYSIZE(inputs), inputs, sizeof(INPUT));
 
     Sleep(5);
     inputs[0].ki.dwFlags = KEYEVENTF_KEYUP;
+    //release enter
     SendInput(ARRAYSIZE(inputs), inputs, sizeof(INPUT));
 
 }
 
+
 void click() {
     mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
 }
-
-struct BIGCOORD {
-    int X;
-    int Y;
-};
 
 static void show_usage()
 {
@@ -178,12 +180,12 @@ int main(int argc, char **argv) {
 
     int lowerLimit = 0;
     int upperLimit = 0;
-    bool througColumns = false;
-    bool througRaws = false;
+    bool throughColumns = false;
+    bool throughRaws = false;
 
 
     if(argc == 1) {
-        througRaws = true;
+        throughRaws = true;
         lowerLimit = 1;
         upperLimit = imn;
     }
@@ -196,13 +198,13 @@ int main(int argc, char **argv) {
     }else if(argc == 4) {
         std::string arg = argv[1];
          if (arg == "-c") {
-             througColumns = true;
+             throughColumns = true;
              lowerLimit = std::stoi(argv[2]);
              upperLimit= std::stoi(argv[3]);
 
 
          } else if (arg == "-r") {
-             througRaws = true;
+             throughRaws = true;
              lowerLimit = std::stoi(argv[2]);
              upperLimit= std::stoi(argv[3]);
          }
@@ -216,14 +218,14 @@ int main(int argc, char **argv) {
         return 3;
     }
 
-    if(througRaws) {
+    if(throughRaws) {
         if (lowerLimit <0 || upperLimit > imn) {
             std::cout << "Check limits";
             return 2;
         }
     }
 
-    if(througColumns) {
+    if(throughColumns) {
         if (lowerLimit <0 || upperLimit > imm) {
             std::cout << "Check limits";
             return 3;
@@ -236,7 +238,7 @@ int main(int argc, char **argv) {
 
     int n = commands.size();
     int m = commands[0].size();
-    
+
 
     if(n != imn || m != imm) {
         std::cout << "fuck" << std::endl;
@@ -260,7 +262,7 @@ int main(int argc, char **argv) {
 
 
     for (int k = 0; k < 4; ++k) {
-        if(througRaws){
+        if(throughRaws){
             for (int i = 0; i < n; ++i) {
                 if(i >= lowerLimit && i <= upperLimit) {
                     for (int j = 0; j < m; ++j) {
@@ -283,7 +285,7 @@ int main(int argc, char **argv) {
         }
 
 
-        if(througColumns) {
+        if(throughColumns) {
             for (int i = 0; i < m; ++i) {
                 if(i >= lowerLimit && i <= upperLimit) {
                     for (int j = 0; j < n; ++j) {
@@ -304,6 +306,8 @@ int main(int argc, char **argv) {
            // return 0;
         }
     }
+
+
   /*  if(througRaws){
         for (int i = 0; i < n; ++i) {
             if(i >= lowerLimit && i <= upperLimit) {
@@ -348,7 +352,5 @@ int main(int argc, char **argv) {
         return 0;
     }
 */
-
-
     return 0;
 }
